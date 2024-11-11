@@ -1,0 +1,11 @@
+# Node modules
+api/node_modules/
+client/node_modules/
+
+# Environment files
+api/.env
+client/.env
+
+# Build directories 
+api/dist/
+client/build/
