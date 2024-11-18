@@ -10,7 +10,7 @@ export default function LoginPage() {
 
   async function login(ev) {
     ev.preventDefault();
-    const response = await fetch("http://localhost:4000/login", {
+    const response = await fetch("http://localhost:4000/auth/login", {
       method: "POST",
       body: JSON.stringify({ email: emailInput, password }),
       headers: { "Content-Type": "application/json" },
@@ -19,7 +19,7 @@ export default function LoginPage() {
 
     if (response.ok) {
       const userInfo = await response.json();
-      //      console.log("Login succesful, userInfo: ", userInfo);
+      //console.log("Login succesful, userInfo: ", userInfo);
       setUserInfo(userInfo); // Actualiza el contexto
       setRedirect(true);
     } else {

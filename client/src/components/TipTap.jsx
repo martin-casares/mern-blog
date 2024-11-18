@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
+import Image from "@tiptap/extension-image";
 import {
   FaBold,
   FaHeading,
@@ -13,9 +14,10 @@ import {
   FaStrikethrough,
   FaUnderline,
   FaUndo,
+  FaImage,
 } from "react-icons/fa";
 
-const MenuBar = ({ editor }) => {
+const MenuBar = ({ editor, addImageFromFile }) => {
   if (!editor) {
     return null;
   }
@@ -85,6 +87,15 @@ const MenuBar = ({ editor }) => {
         >
           <FaQuoteLeft />
         </button>
+
+        <label>
+          <FaImage />
+          <input
+            type="file"
+            style={{ display: "none" }}
+            onChange={addImageFromFile}
+          />
+        </label>
       </div>
       <div>
         <button onClick={() => editor.chain().focus().undo().run()}>
@@ -98,27 +109,37 @@ const MenuBar = ({ editor }) => {
   );
 };
 
-export const Tiptap = ({ description, setDescription }) => {
+export const Tiptap = ({ description, setDescription, setImages }) => {
   const editor = useEditor({
-    extensions: [StarterKit, Underline],
-    //content: `<p>Escribe tu contenido aquí...</p>`,
+    extensions: [StarterKit, Underline, Image],
     content: description,
-
     onUpdate: ({ editor }) => {
       const html = editor.getHTML();
       setDescription(html);
     },
+    // storage: {}, // Agregamos un espacio de almacenamiento para las imágenes
   });
 
+  const addImageFromFile = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const imageUrl = URL.createObjectURL(file); // Crear URL temporal
+    editor.chain().focus().setImage({ src: imageUrl }).run();
+
+    // Actualizar las imágenes en el componente padre
+    setImages((prev) => [...prev, file]);
+  };
+
   useEffect(() => {
-    if (editor && description) {
+    if (editor && description && editor.getHTML() !== description) {
       editor.commands.setContent(description);
     }
   }, [description, editor]);
 
   return (
     <div className="textEditor">
-      <MenuBar editor={editor} />
+      <MenuBar editor={editor} addImageFromFile={addImageFromFile} />
       <EditorContent editor={editor} />
     </div>
   );

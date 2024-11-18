@@ -104,13 +104,13 @@ app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
   });
 });
 
-app.get("/post", async (req, res) => {
-  const posts = await Post.find()
-    .populate("author", ["username"])
-    .sort({ createdAt: -1 })
-    .limit(20);
-  res.json(posts);
-});
+/* app.get("/post", async (req, res) => {
+ *   const posts = await Post.find()
+ *     .populate("author", ["username"])
+ *     .sort({ createdAt: -1 })
+ *     .limit(20);
+ *   res.json(posts);
+ * }); */
 
 app.get("/post/:id", async (req, res) => {
   const { id } = req.params;
@@ -157,10 +157,9 @@ app.put("/post", uploadMiddleware.single("file"), async (req, res) => {
         cover: newPath ? newPath : postDoc.cover,
       },
       { new: true },
-    ); // Esto devuelve el documento actualizado en `updatedPost`
+    );
 
     res.json(updatePost);
   });
 });
-
 app.listen(4000);
