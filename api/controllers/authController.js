@@ -5,16 +5,48 @@ const secret = process.env.JWT_SECRET;
 const salt = bcrypt.genSaltSync(10);
 
 exports.register = async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, email, password, repassword } = req.body;
+
+  if (!username || !email || !password) {
+    return res.status(400).json({ error: "All fields are required" });
+  }
+
+  if (password.length < 6) {
+    return res
+      .status(400)
+      .json({ error: "Password must be at least 6 characters long" });
+  }
+
   try {
     const userDoc = await User.create({
       username,
       email,
       password: bcrypt.hashSync(password, salt),
     });
-    res.json(userDoc);
+
+    const payload = {
+      username: userDoc.username,
+      email: userDoc.email,
+      id: userDoc._id,
+    };
+
+    jwt.sign(payload, secret, { expiresIn: "24h" }, (err, token) => {
+      if (err) return res.status(500).json("Error generating token");
+      res
+        .cookie("token", token, {
+          httpOnly: true,
+          secure: false, // Cambia a true en producción con HTTPS
+          sameSite: "Lax",
+        })
+        .json(payload); // Envía la información necesaria al frontend
+    });
   } catch (error) {
-    res.status(400).json(error);
+    if (error.code === 11000) {
+      // Captura el error de índice duplicado
+      const field = Object.keys(error.keyPattern)[0]; // Identifica el campo duplicado
+      return res.status(400).json({ error: `${field} already exists` });
+    }
+    res.status(400).json(error); // Otros errores
   }
 };
 
