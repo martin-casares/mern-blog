@@ -8,7 +8,7 @@ export default {
         banner: "rgb(255, 192, 23)",
       },
       fontFamily: {
-        title: `gt-super, Georgia, Cambria, Times New Roman, Times, serf;`,
+        title: `gt-super, Georgia, Cambria, Times New Roman, Times, serif;`,
         texts: `sohne, Helvetica Neue, Helvetica, Arial, sans-serif`,
       },
       gridTemplateColumns: {

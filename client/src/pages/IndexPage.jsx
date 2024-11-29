@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
+
 import Post from "../components/Post";
+import Hero from "../components/Hero";
 
 export default function IndexPage() {
   const [posts, setPosts] = useState([]);
@@ -14,6 +16,8 @@ export default function IndexPage() {
 
   return (
     <>
+      <Hero />
+
       {posts.length > 0 &&
         posts.map((post) => <Post key={post._id} {...post} />)}
     </>
