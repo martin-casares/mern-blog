@@ -1,11 +1,13 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../UserContext";
+import { Auth } from "./Auth/Auth";
 
 export default function Header() {
   const navigate = useNavigate();
   const { userInfo, setUserInfo } = useContext(UserContext);
   const [isActive, setIsActive] = useState(false);
+  const [modal, setModal] = useState(false);
 
   function logout() {
     fetch("http://localhost:4000/auth/logout", {
@@ -16,7 +18,6 @@ export default function Header() {
       navigate("/");
     });
   }
-
   useEffect(() => {
     const scrollMe = () => {
       window.scrollY > 50 ? setIsActive(true) : setIsActive(false);
@@ -46,9 +47,9 @@ export default function Header() {
                 Create new post
               </Link>
               <a
-                href="#"
+                href="/"
                 onClick={logout}
-                className={`bg-black text-white rounded-full px-3 p-2 text-sm font-medium ${
+                className={`bg-black text-white rounded-full px-5 p-2 text-sm font-bold ${
                   isActive ? "bg-green-900" : "bg-black"
                 }`}
               >
@@ -58,20 +59,13 @@ export default function Header() {
           ) : (
             // Si no hay userInfo, mostramos las opciones de login/registro
             <>
-              <div className="relative">
-                <Link
-                  to="/login"
-                  className="ml-5 text-sm sm:flex items-center gap-5"
-                >
-                  Login
-                </Link>
-              </div>
-              <Link
-                to="/register"
-                className="bg-black text-white rounded-full px-3 p-2 text-sm font-medium"
+              <button
+                onClick={() => setModal(true)}
+                className="bg-black text-white rounded-full px-5 p-2 text-sm font-bold"
               >
-                Register
-              </Link>
+                Login
+              </button>
+              <Auth modal={modal} setModal={setModal} />
             </>
           )}
         </nav>
