@@ -9,7 +9,7 @@ const RequireAuth = ({ children }) => {
 
   if (!userInfo) {
     // Si el usuario no está autenticado, redirigir a la página de login
-    return <Navigate to="/login" />;
+    return <Navigate to="/" />;
   }
 
   // Si está autenticado, renderiza el componente hijo

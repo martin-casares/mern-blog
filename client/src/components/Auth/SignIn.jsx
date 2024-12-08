@@ -5,7 +5,7 @@ import { MdKeyboardArrowLeft } from "react-icons/md";
 
 import Input from "../../utils/Input";
 
-export default function SignIn({ setSignReq }) {
+export default function SignIn({ setSignReq, setModal }) {
   const [emailInput, setEmailInput] = useState("");
   const [password, setPassword] = useState("");
   const [redirect, setRedirect] = useState(false);
@@ -25,6 +25,7 @@ export default function SignIn({ setSignReq }) {
       //console.log("Login succesful, userInfo: ", userInfo);
       setUserInfo(userInfo); // Actualiza el contexto
       setRedirect(true);
+      setModal(false);
     } else {
       alert("Wrong Credentials!");
     }
