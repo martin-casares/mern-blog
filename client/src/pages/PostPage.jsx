@@ -43,7 +43,7 @@ export default function PostPage() {
 
   return (
     <>
-      <div className="post-page">
+      <div className="">
         <h1>{postInfo.title}</h1>
         <time>{format(new Date(postInfo.createdAt), "MMM d, yyy HH:mm")}</time>
         <div className="author">by @{postInfo.author.username}</div>

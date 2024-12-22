@@ -3,10 +3,9 @@ import { LiaTimesSolid } from "react-icons/lia";
 import { IoSettingsSharp } from "react-icons/io5";
 
 import { UserContext } from "../UserContext";
+import EditProfile from "./EditProfile";
 
 export default function Profile() {
-  const { userInfo, setUserInfo } = useContext(UserContext);
-
   const activities = [
     { title: "Home", comp: "ProfileHome" },
     { title: "Lists", comp: "ProfileLists" },
@@ -25,8 +24,10 @@ export default function Profile() {
     "Teams",
   ];
 
+  const { userInfo, setUserInfo } = useContext(UserContext);
   const [currentActive, setCurrentActive] = useState(activities[0]);
   const [modal, setModal] = useState(false);
+  const [editModal, setEditModal] = useState(true);
 
   return (
     <section className="size flex gap-[4rem] relative">
@@ -89,7 +90,10 @@ export default function Profile() {
           <p className="text-gray-500 first-letter:uppercase text-sm">
             Id volutpat lacus laoreet non curabitur gravida arcu ac tortor!
           </p>
-          <button className="text-green-700 pt-6 text-sm w-fit">
+          <button
+            onClick={() => setEditModal(true)}
+            className="text-green-700 pt-6 text-sm w-fit"
+          >
             Edit Profile
           </button>
           {/* Navigation */}
@@ -105,6 +109,9 @@ export default function Profile() {
           </div>
         </div>
       </div>
+      {editModal && (
+        <EditProfile editModal={editModal} setEditModal={setEditModal} />
+      )}
     </section>
   );
 }
