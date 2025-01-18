@@ -4,13 +4,22 @@ import { IoSettingsSharp } from "react-icons/io5";
 
 import { UserContext } from "../UserContext";
 import EditProfile from "./EditProfile";
+import ProfileAbout from "./Profile/ProfileAbout";
 
 export default function Profile() {
+  const { userInfo, setUserInfo } = useContext(UserContext);
+  const [editModal, setEditModal] = useState(false);
   const activities = [
     { title: "Home", comp: "ProfileHome" },
     { title: "Lists", comp: "ProfileLists" },
-    { title: "About", comp: "ProfileAbout" },
+    {
+      title: "About",
+      comp: <ProfileAbout userInfo={userInfo} setEditModal={setEditModal} />,
+    },
   ];
+
+  const [currentActive, setCurrentActive] = useState(activities[0]);
+  const [modal, setModal] = useState(false);
 
   const discoverActions = [
     "Help",
@@ -23,11 +32,6 @@ export default function Profile() {
     "About",
     "Teams",
   ];
-
-  const { userInfo, setUserInfo } = useContext(UserContext);
-  const [currentActive, setCurrentActive] = useState(activities[0]);
-  const [modal, setModal] = useState(false);
-  const [editModal, setEditModal] = useState(true);
 
   return (
     <section className="size flex gap-[4rem] relative">
@@ -110,7 +114,11 @@ export default function Profile() {
         </div>
       </div>
       {editModal && (
-        <EditProfile editModal={editModal} setEditModal={setEditModal} />
+        <EditProfile
+          editModal={editModal}
+          setEditModal={setEditModal}
+          userInfo={userInfo}
+        />
       )}
     </section>
   );

@@ -53,7 +53,7 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
   const { email, password } = req.body;
   const userDoc = await User.findOne({ email });
-  //console.log(userDoc);
+  //console.log("Login:", userDoc);
   if (!userDoc || !bcrypt.compareSync(password, userDoc.password)) {
     return res.status(400).json("wrong credentials");
   }
@@ -62,6 +62,8 @@ exports.login = async (req, res) => {
     email,
     id: userDoc._id,
     username: userDoc.username,
+    bio: userDoc.bio,
+    userImg: userDoc.userImg,
   };
 
   jwt.sign(payload, secret, { expiresIn: "24h" }, (err, token) => {
@@ -72,7 +74,12 @@ exports.login = async (req, res) => {
         secure: false,
         sameSite: "Lax",
       })
-      .json({ email, id: userDoc._id, username: userDoc.username });
+      .json({
+        email,
+        id: userDoc._id,
+        username: userDoc.username,
+        bio: userDoc.bio,
+      });
   });
 };
 
@@ -99,4 +106,28 @@ exports.getProfile = (req, res) => {
     console.log("Usuario autenticado:", userInfo);
     res.json(userInfo);
   });
+};
+
+exports.updateProfile = async (req, res) => {
+  console.log("Request body:", req.body);
+  console.log("Uploaded file:", req.file);
+  try {
+    const { id, username, bio, email } = req.body;
+    const userImg = req.file?.path;
+
+    const updatedData = { username, bio, email };
+    if (userImg) updatedData.userImg = userImg;
+
+    // actualizar el usuario en la db
+    const user = await User.findByIdAndUpdate(id, updatedData, { new: true });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 };

@@ -70,7 +70,11 @@ export default function Header() {
                   <img
                     onClick={() => setModal(true)}
                     className="w-[2.3rem] wr-[2.3rem] object-cover rounded-full cursor-pointer"
-                    src="/profile.jpg"
+                    src={
+                      userInfo.userImg
+                        ? `http://localhost:4000/${userInfo.userImg}`
+                        : "/profile.jpg"
+                    }
                     alt="profile-img"
                   />
                   <span className="text-gray-500 cursor-pointer">
@@ -83,7 +87,7 @@ export default function Header() {
               </div>
             </>
           ) : (
-            // Si no hay userInfo, mostramos las opciones de login/registro
+            // Si no hay userInfo, muestra las opciones de login/registro
             <>
               <div className="flex gap-5">
                 <Link>About</Link>
